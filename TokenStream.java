@@ -58,6 +58,14 @@ public class TokenStream {
 				// skip rest of line - it's a comment.
 				// TODO TO BE COMPLETED
 				// look for <cr>, <lf>, <ff>
+				
+				// doing: IN PROGRESS
+				t.setType("Comment");
+				t.setValue('//');
+				nextChar = readChar();
+				while (!isEndOfLine(nextChar)) {
+					t.setValue(t.getValue() + nextChar);
+				}
 
 			} else {
 				// A slash followed by anything else must be an operator.
@@ -119,6 +127,9 @@ public class TokenStream {
 		if (isSeparator(nextChar)) {
 			t.setType("Separator");
 			// TODO TO BE COMPLETED
+			// ^ doing
+			t.setValue(t.getValue());
+
 			return t;
 		}
 
@@ -215,13 +226,15 @@ public class TokenStream {
 
 	private boolean isSeparator(char c) {
 		// TODO TO BE COMPLETED
-		return false;
+		// doing:
+		return (c == '(' || c == ')' || c == '{' || c == '}' || c == ';' || c == ',');
 	}
 
 	private boolean isOperator(char c) {
 		// Checks for characters that start operators
 		// TODO TO BE COMPLETED
-		return false;
+		// doing:
+		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '<' || c == '>' || c == '=' || c == '!' || c == '&' || c == '|' || c == ':');
 	}
 
 	private boolean isLetter(char c) {
