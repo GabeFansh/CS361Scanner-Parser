@@ -79,14 +79,31 @@ public class TokenStream {
 			switch (nextChar) {
 			// TODO TO BE COMPLETED WHERE NEEDED
 			case '<':
-			case '>':
-			case '=':
 				char firstChar = nextChar;
 				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
+				} else {
 					t.setValue(String.valueOf(firstChar));
+				}
+				return t;
+			case '>':
+				firstChar = nextChar;
+				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+				} else {
+					t.setValue(String.valueOf(firstChar));
+				}
+				return t;
+			case '=':
+				firstChar = nextChar;
+				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
 				} else {
 					t.setType("Other");
 				}
