@@ -81,8 +81,18 @@ public class TokenStream {
 			case '<':
 			case '>':
 			case '=':
-			case '!':
 				char firstChar = nextChar;
+				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+					t.setValue(String.valueOf(firstChar));
+				} else {
+					t.setType("Other");
+				}
+				return t;
+			case '!':
+				firstChar = nextChar;
 				nextChar = readChar();
 				if (nextChar == '=') {
 					t.setValue(t.getValue() + nextChar);
