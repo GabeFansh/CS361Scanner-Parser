@@ -58,14 +58,10 @@ public class TokenStream {
 				// skip rest of line - it's a comment.
 				// TODO TO BE COMPLETED
 				// look for <cr>, <lf>, <ff>
-				
-				// doing: IN PROGRESS
-				t.setType("Comment");
-				t.setValue('//');
-				nextChar = readChar();
-				while (!isEndOfLine(nextChar)) {
-					t.setValue(t.getValue() + nextChar);
+				while (!isEndOfLine(nextChar) && !isEof) {
+					nextChar = readChar();
 				}
+				skipWhiteSpace();
 
 			} else {
 				// A slash followed by anything else must be an operator.
@@ -83,14 +79,17 @@ public class TokenStream {
 			switch (nextChar) {
 			// TODO TO BE COMPLETED WHERE NEEDED
 			case '<':
-				// <=
 			case '>':
-				// >=
 			case '=':
-				// ==
 			case '!':
-				// !=
+				char firstChar = nextChar;
 				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+				} else {
+					t.setValue(String.valueOf(firstChar));
+				}
 				return t;
 			case '|':
 				// Look for ||
@@ -98,7 +97,6 @@ public class TokenStream {
 				if (nextChar == '|') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
 				} else {
 					t.setType("Other");
 				}
@@ -110,12 +108,21 @@ public class TokenStream {
 				if (nextChar == '&') {
 					t.setValue(t.getValue() + nextChar);
 					nextChar = readChar();
-					return t;
 				} else {
 					t.setType("Other");
 				}
 
 				return t;
+
+			case ':':
+				nextChar = readChar();
+				if (nextChar == '=') {
+					t.setValue(t.getValue() + nextChar);
+					nextChar = readChar();
+				} else {
+					t.setType("Other");
+				}
+
 
 			default: // all other operators
 				nextChar = readChar();
@@ -127,9 +134,8 @@ public class TokenStream {
 		if (isSeparator(nextChar)) {
 			t.setType("Separator");
 			// TODO TO BE COMPLETED
-			// ^ doing
-			t.setValue(t.getValue());
-
+			t.setValue(String.valueOf(nextChar));
+			nextChar = readChar();
 			return t;
 		}
 
@@ -201,7 +207,13 @@ public class TokenStream {
 	}
 
 	private boolean isKeyword(String s) {
-		// TODO TO BE COMPLETED 
+		// TODO TO BE COMPLETED
+		String[] keywords = { "if", "else", "while", "integer", "main", "bool", };
+		for (String keyword : keywords) {
+			if (s.equals(keyword)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -226,15 +238,25 @@ public class TokenStream {
 
 	private boolean isSeparator(char c) {
 		// TODO TO BE COMPLETED
-		// doing:
-		return (c == '(' || c == ')' || c == '{' || c == '}' || c == ';' || c == ',');
+		char[] separators = {';', ',', '(', ')', '{', '}'};
+		for (char separator : separators) {
+			if (c == separator) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isOperator(char c) {
 		// Checks for characters that start operators
 		// TODO TO BE COMPLETED
-		// doing:
-		return (c == '+' || c == '-' || c == '*' || c == '/' || c == '<' || c == '>' || c == '=' || c == '!' || c == '&' || c == '|' || c == ':');
+		char[] operators = { '+', '-', '*', '/', '<', '>', '=', '!', '&', '|', ':' };
+		for (char operator : operators) {
+			if (c == operator) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private boolean isLetter(char c) {
@@ -243,7 +265,7 @@ public class TokenStream {
 
 	private boolean isDigit(char c) {
 		// TODO TO BE COMPLETED
-		return false;
+		return (c >= '0' && c <= '9');
 	}
 
 	public boolean isEndofFile() {
