@@ -46,11 +46,12 @@ public class ConcreteSyntax {
 	public Program program() {
 		// TODO TO BE COMPLETED 
 		// Program --> main '{' Declarations Statements '}'
-		String[] header = { };
 		Program p = new Program();
-		for (int i = 0; i < header.length; i++)
-			// bypass " main { "
-			match(header[i]);
+		match("main");
+		match("{");
+		p.decpart = declarations();
+		p.body = statements();
+		match("}");
 		return p;
 	}
 
@@ -153,15 +154,12 @@ public class ConcreteSyntax {
 		Assignment a = new Assignment();
 		if (token.getType().equals("Identifier")) {
 			// TODO TO BE COMPLETED
-			// doing
 			a.target = new Variable();
 			a.target.id = token.getValue();
 			token = input.nextToken();
 			match(":=");
-			token = input.nextToken();
-			a.source = new Expression();
 			a.source = expression();
-			// to here
+			match(";");
 		} else
 			throw new RuntimeException(SyntaxError("Identifier"));
 		return a;
@@ -286,7 +284,7 @@ public class ConcreteSyntax {
 		} else if (token.getType().equals("Literal")) {
 			Value v = null;
 			if (isInteger(token.getValue()))
-				v = new Value((new Integer(token.getValue())).intValue());
+				v = new Value(Integer.parseInt(token.getValue()));
 			else if (token.getValue().equals("true"))
 				v = new Value(true);
 			else if (token.getValue().equals("false"))
@@ -308,6 +306,15 @@ public class ConcreteSyntax {
 		// IfStatement --> if ( Expression ) Statement { else Statement }opt
 		Conditional c = new Conditional();
 		// TODO TO BE COMPLETED
+		match("if");
+		match("(");
+		c.test = expression();
+		match(")");
+		c.thenbranch = statement();
+		if (token.getValue().equals("else")) {
+			token = input.nextToken();
+			c.elsebranch = statement();
+		}
 		return c;
 	}
 
@@ -315,6 +322,11 @@ public class ConcreteSyntax {
 		// WhileStatement --> while ( Expression ) Statement
 		Loop l = new Loop();
 		// TODO TO BE COMPLETED
+		match("while");
+		match("(");
+		l.test = expression();
+		match(")");
+		l.body = statement();
 		return l;
 	}
 
