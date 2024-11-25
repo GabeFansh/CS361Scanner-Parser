@@ -127,10 +127,14 @@ public class ConcreteSyntax {
 		else if (token.getValue().equals("while")) {
 			// WhileStatement
 			// TODO TO BE COMPLETED
+			// doing
 			s = whileStatement();
+			// to here
 		} else if (token.getType().equals("Identifier")) { // Assignment
 			// TODO TO BE COMPLETED
+			// doing
 			s = assignment();
+			// to here
 		} else
 			throw new RuntimeException(SyntaxError("Statement"));
 		return s;
@@ -185,10 +189,12 @@ public class ConcreteSyntax {
 		while (token.getValue().equals("&&")) {
 			b = new Binary();
 			// TODO TO BE COMPLETED
-			b.term1 = e;
+			// doing
 			b.op = new Operator(token.getValue());
+			b.term1 = e;
 			token = input.nextToken();
 			b.term2 = relation();
+			// to here
 			e = b;
 		}
 		return e;
@@ -200,16 +206,18 @@ public class ConcreteSyntax {
 		Expression e;
 		e = addition();
 		// TODO TO BE COMPLETED
+		// doing
 		while (token.getValue().equals("<") || token.getValue().equals("<=")
-				|| token.getValue().equals(">=")
-				|| token.getValue().equals("==")
-				|| token.getValue().equals("<>")) {
+				|| token.getValue().equals(">=") || token.getValue().equals(">")
+				|| token.getValue().equals("==") || token.getValue().equals("!=")) {
 			b = new Binary();
 			// TODO TO BE COMPLETED
-			b.term1 = e;
+			// doing
 			b.op = new Operator(token.getValue());
+			b.term1 = e;
 			token = input.nextToken();
 			b.term2 = addition();
+			// to here
 			e = b;
 		}
 		return e;
@@ -222,12 +230,14 @@ public class ConcreteSyntax {
 		e = term();
 		while (token.getValue().equals("+") || token.getValue().equals("-")) {
 			// TODO TO BE COMPLETED
+			// doing
 			b = new Binary();
-			b.term1 = e;
 			b.op = new Operator(token.getValue());
+			b.term1 = e;
 			token = input.nextToken();
 			b.term2 = term();
 			e = b;
+			//to here
 		}
 		return e;
 	}
@@ -239,11 +249,12 @@ public class ConcreteSyntax {
 		e = negation();
 		while (token.getValue().equals("*") || token.getValue().equals("/")) {
 			b = new Binary();
-			// TODO TO BE COMPLETED
+			// doing
 			b.term1 = e;
 			b.op = new Operator(token.getValue());
 			token = input.nextToken();
 			b.term2 = negation();
+			// to here
 			e = b;
 		}
 		return e;
